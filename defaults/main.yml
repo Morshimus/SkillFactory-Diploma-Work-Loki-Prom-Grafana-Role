@@ -1,2 +1,21 @@
 ---
 # defaults file for PromLokiGraf
+node_exporter_targets:
+          - nodeexporter:9100
+          - k8s.polar.net.ru:30091
+cadvisor_exporter_targets:
+          - cadvisor:8080
+          - k8s.polar.net.ru:9080
+nginx_exporter_targets:
+          - k8s.polar.net.ru:10254
+postgresql_exporter_targets:
+          - k8s.polar.net.ru:9187
+django_exporter_targets:
+          - skillfactory.polar.net.ru
+pushgateway_targets:
+          - pushgateway:9091
+blackbox_targets:
+          -  https://skillfactory.polar.net.ru/polls/
+alertmanagers_targets:
+          - 'alertmanager:9093'
+Prometheus_Docker_root: /opt/morsh_monit

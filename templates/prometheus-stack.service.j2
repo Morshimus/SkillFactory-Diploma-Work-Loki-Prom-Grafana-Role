@@ -1,0 +1,18 @@
+[Unit]
+Description= Prometheus Stack services for polar org
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+WorkingDirectory={{ Prometheus_Docker_root }}
+
+# Compose up
+ExecStart=/bin/docker-compose -f docker-compose.yml up
+
+# Compose down, remove containers
+ExecStop=/bin/docker-compose -f docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target

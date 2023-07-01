@@ -1,2 +1,82 @@
 ---
-# tasks file for PromLokiGraf
+- name: Install Docker for tests MOLECULE
+  include_role:
+   name: docker
+  when: molecule_yml is defined
+  
+- name: Start Docker Service MOLECULE
+  shell: /etc/init.d/docker start
+  args:
+     executable: /usr/bin/bash  
+  register: output_docker_service
+  failed_when: "'bash: /etc/init.d/docker: No such file or directory' in output_docker_service.stdout "
+  when: molecule_yml is defined 
+
+
+- name: Create root folder required  for PrometheusStack Docker farm
+  file:
+    path: "{{ Prometheus_Docker_root }}"
+    state: directory
+    mode: '0755'
+
+- name: Create  folder required  for PrometheusStack Grafana statistics
+  file:
+    path: "{{ Prometheus_Docker_root }}/grafana_operational_data"
+    state: directory
+    mode: '0755'
+
+- name: Create  folder required  for PrometheusStack Prometheus statistics
+  file:
+    path: "{{ Prometheus_Docker_root }}/grafana_operational_data"
+    state: directory
+    mode: '0755'
+
+- name: Download Promtheus Stack Config Folders archive and extract .
+  shell: |
+      cd "{{ Prometheus_Docker_root }}" && \
+      curl -L -o PrometheusStack.tar.gz.gpg \ 
+      "https://github.com/Morshimus/SkillFactory-Diploma-Work-Loki-Prom-Grafana-Role/releases/download/1.0.0/PrometheusStack.tar.gz.gpg" &&
+      gpg --pinentry-mode loopback --passphrase "{{ Promtheus_archive_password }}" -d PrometheusStack.tar.gz.gpg | tar -xvzf - && chmod -R 0777 ./PrometheusStack
+  args:
+    executable: /bin/bash
+
+- name: Check that the PrometheusStack service file exist
+  stat:
+    path: "/etc/systemd/system/prometheus-stack.service"
+  register: prom_service_result
+
+- name: Configure secrets  .env file for PrometheusStack
+  template:
+    src: env.j2
+    dest: "{{ Prometheus_Docker_root }}/.env"
+    backup: yes
+    mode: '0600'
+  notify: restart-prom
+
+- name: Configure prometheus scrape config for PrometheusStack docker-compose
+  template:
+    src: prometheus.yml.j2
+    dest: "{{ Prometheus_Docker_root }}/PrometheusStack/prometheus/prometheus.yml"
+    backup: yes
+    mode: '0777'
+  notify: restart-prom
+
+- name: Copy static file docker-compose.yml to PrometheusStacl docker root
+  copy:
+    src: docker-compose.yml
+    dest: "{{ Prometheus_Docker_root }}"
+  notify: restart-prom
+
+- name: Configure service for PrometheusStack docker-compose
+  template:
+    src: prometheus-stack.service.j2
+    dest: /etc/systemd/system/prometheus-stack.service
+    backup: yes
+    mode: '0600'
+  notify: daemon-reload
+
+- name: Start Prometheus Stack service
+  service:
+    name: prometheus-stack
+    enabled: true
+    state: started

@@ -1,2 +1,14 @@
 ---
-# handlers file for PromLokiGraf
+- name: reload systemd configuration
+  listen: daemon-reload
+  systemd:
+    daemon_reload: true
+
+- name: Restart PrometheusStack service
+  listen: restart-prom
+  service:
+      name: prometheus-stack
+      state: restarted
+      enabled: yes
+  when: 
+    - prom_service_result.stat.exists

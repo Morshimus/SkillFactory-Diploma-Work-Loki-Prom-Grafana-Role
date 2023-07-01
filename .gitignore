@@ -3,6 +3,9 @@
 **/.terraform/*
 **/files/PrometheusStack/*
 **/files/.secret_*
+**/files/.env
+**/files/prometheus_operational_data/*
+**/files/grafana_operational_data/*
 # .tfstate files
 *.tfstate
 *.tfstate.*

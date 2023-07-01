@@ -1,0 +1,27 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  roles:
+   - role: tests/test_port
+     vars:
+       port: "3000"
+   - role: tests/test_grafana_login
+     vars:
+       port: "3000"
+       
+  tasks:
+
+  - name: check Grafana port result 
+    assert:
+        that:
+           - "{{ output_port.failed }} == false"    
+
+  - name: check Grafanalogin work result 
+    assert:
+        that:
+           - "'200' in output_grafana_login_result.stdout"  
+
+
