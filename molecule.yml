@@ -1,0 +1,22 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: Ubuntu-22-04
+    image: morsh92/ubuntu-with-systemd:22-04-lts
+    privileged: true
+    pre_build_image: true
+    command: /lib/systemd/systemd
+    tmpfs:
+     - /tmp
+     - /run 
+     - /run/lock
+    volumes:
+     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+
