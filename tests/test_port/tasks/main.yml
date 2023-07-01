@@ -1,5 +1,9 @@
 ---
 # tasks file for test_port
+  - name: Pause for 1 minutes to wait grafana up.
+    pause:
+     minutes: 1
+      
   - name: test port
     ansible.builtin.wait_for:
        host: "localhost"

@@ -2,5 +2,5 @@
 # tasks file for test_artifactory_repository
 - name: Check link Grafana
   shell: | 
-     curl -I http://localhost:3000 --max-time 5 | grep 200
+     curl -I http://localhost:3000/login --max-time 5 | grep 200
   register: output_grafana_login_result
