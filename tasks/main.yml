@@ -27,7 +27,7 @@
 
 - name: Create  folder required  for PrometheusStack Prometheus statistics
   file:
-    path: "{{ Prometheus_Docker_root }}/grafana_operational_data"
+    path: "{{ Prometheus_Docker_root }}/prometheus_operational_data"
     state: directory
     mode: '0755'
 
