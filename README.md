@@ -1,38 +1,61 @@
-PrometheusStack
-=========
+# Prometheus-Stack Role
 
-A brief description of the role goes here.
+A role for installing and configuring Prometheus Stack.
 
-Requirements
-------------
+## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Docker installation is required.
 
-Role Variables
---------------
+## Role Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+The following variables can be set for this role:
 
-Dependencies
-------------
+- `Prometheus_Docker_root`: The root folder required for Prometheus Stack Docker farm.
+- `prometheus_package_version`: The version of Prometheus package.
+- `node_exporter_targets`: A list of targets for the Node Exporter.
+- `cadvisor_exporter_targets`: A list of targets for the cAdvisor Exporter.
+- `nginx_exporter_targets`: A list of targets for the Nginx Exporter.
+- `postgresql_exporter_targets`: A list of targets for the PostgreSQL Exporter.
+- `Promtheus_archive_password`: Password for the Prometheus Stack archive.
+- `admin_user`: Username for administrative purposes.
+- `admin_password`: Password for the administrative user.
+- `admin_password_hash`: Hashed password for the administrative user.
+- `telegram_token`: Token for Telegram integration.
+- `telegram_chatid`: Chat ID for Telegram integration.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Dependencies
 
-Example Playbook
-----------------
+No external role dependencies.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+## Example Playbook
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+Here's an example of how to use the Prometheus-Stack Role:
 
-License
--------
+```yaml
+- hosts: monitoring
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: Prometheus-Stack
+      vars:
+        Prometheus_Docker_root: /opt/morsh_monit
+        prometheus_package_version: "1.2.0"
+        node_exporter_targets:
+          - nodeexporter:9100
+        cadvisor_exporter_targets:
+          - cadvisor:8080
+        nginx_exporter_targets:
+          - nginx:10254
+        postgresql_exporter_targets:
+          - postgresql:12938
+        Promtheus_archive_password: "your_prometheus_archive_password"
+        admin_user: "admin"
+        admin_password: "admin123"
+        admin_password_hash: "$6$zqKl8Jzv7c6hMvZ7$AQTB1I1L1uBT8EG.Rc.c22P7Cr5CSoeRJTYhMK4UStZJit0Dvg.cHzLyA77zWtnyRZN2.KKX52xP4guy7.tNb."
+        telegram_token: "your_telegram_token"
+        telegram_chatid: "your_telegram_chatid"
+```
+
+# License
 
 BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
