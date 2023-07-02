@@ -35,7 +35,7 @@
   shell: |
       cd "{{ Prometheus_Docker_root }}" && \
       curl -L -o PrometheusStack.tar.gz.gpg \ 
-      "https://github.com/Morshimus/SkillFactory-Diploma-Work-Loki-Prom-Grafana-Role/releases/download/1.1.0/PrometheusStack.tar.gz.gpg" &&
+      "https://github.com/Morshimus/SkillFactory-Diploma-Work-Loki-Prom-Grafana-Role/releases/download/{{ prometheus_package_version }}/PrometheusStack.tar.gz.gpg" &&
       gpg --pinentry-mode loopback --passphrase "{{ Promtheus_archive_password }}" -d PrometheusStack.tar.gz.gpg | tar -xvzf - && chmod -R 0777 ./PrometheusStack
   args:
     executable: /bin/bash

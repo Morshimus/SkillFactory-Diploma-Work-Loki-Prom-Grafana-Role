@@ -1,5 +1,6 @@
 ---
 # defaults file for PromLokiGraf
+prometheus_package_version: "1.2.0"
 node_exporter_targets:
           - nodeexporter:9100
           - k8s.polar.net.ru:30091
